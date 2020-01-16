@@ -8,3 +8,5 @@ expo install react-navigation react-native-gesture-handler react-native-reanimat
 expo install react-redux redux 
 yarn add react-navigation-stack @react-native-community/masked-view
 export install react-navigation-drawer
+yarn add native-base
+expo install expo-font

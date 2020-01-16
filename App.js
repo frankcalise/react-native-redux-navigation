@@ -1,12 +1,22 @@
 import React from "react";
+import { AppLoading } from "expo";
+import * as Font from "expo-font";
 import {
   ActivityIndicator,
+  //Button,
   AsyncStorage,
-  Button,
   StatusBar,
-  StyleSheet,
-  View
+  StyleSheet
 } from "react-native";
+import {
+  Container,
+  Button,
+  Icon,
+  Text,
+  Content,
+  View,
+  Left
+} from "native-base";
 import { createSwitchNavigator, createAppContainer } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 import { createDrawerNavigator } from "react-navigation-drawer";
@@ -19,7 +29,9 @@ class SignInScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Button title="Sign in!" onPress={this._signInAsync} />
+        <Button onPress={this._signInAsync}>
+          <Text>Sign in!</Text>
+        </Button>
       </View>
     );
   }
@@ -37,10 +49,16 @@ class HomeScreen extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <Button title="Show me more of the app" onPress={this._showMoreApp} />
-        <Button title="Actually, sign me out :)" onPress={this._signOutAsync} />
-      </View>
+      <Container>
+        <Content>
+          <Button onPress={this._showMoreApp}>
+            <Text>Show me more of the app</Text>
+          </Button>
+          <Button onPress={this._signOutAsync}>
+            <Text>Actually, sign me out :)</Text>
+          </Button>
+        </Content>
+      </Container>
     );
   }
 
@@ -62,7 +80,9 @@ class OtherScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Button title="I'm done, sign me out" onPress={this._signOutAsync} />
+        <Button onPress={this._signOutAsync}>
+          <Text>I'm done, sign me out</Text>
+        </Button>
         <StatusBar barStyle="default" />
       </View>
     );
@@ -110,20 +130,66 @@ const styles = StyleSheet.create({
 
 const AppStack = createDrawerNavigator(
   { Home: HomeScreen, Other: OtherScreen },
-  { initialRouteName: "Home" }
+  {
+    initialRouteName: "Home",
+    navigationOptions: ({ navigation }) => ({
+      title: "Frank's App",
+      headerLeft: () => (
+        <Left style={{ flex: 1 }}>
+          <Button transparent onPress={() => navigation.toggleDrawer()}>
+            <Icon name="menu" />
+          </Button>
+        </Left>
+      )
+    })
+  }
 );
-const RootStack = createStackNavigator({ AppStack: { screen: AppStack } });
+const RootStack = createStackNavigator({
+  AppStack: {
+    screen: AppStack
+  }
+});
 const AuthStack = createStackNavigator({ SignIn: SignInScreen });
 
-export default createAppContainer(
-  createSwitchNavigator(
-    {
-      AuthLoading: AuthLoadingScreen,
-      App: AppStack,
-      Auth: AuthStack
-    },
-    {
-      initialRouteName: "AuthLoading"
-    }
-  )
+const AppNavigator = createSwitchNavigator(
+  {
+    AuthLoading: AuthLoadingScreen,
+    App: RootStack,
+    Auth: AuthStack
+  },
+  {
+    initialRouteName: "AuthLoading"
+  }
 );
+
+const AppContainer = createAppContainer(AppNavigator)
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isReady: false
+    };
+  }
+
+  async componentDidMount() {
+    await Font.loadAsync({
+      Roboto: require("native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
+    });
+    this.setState({ isReady: true });
+  }
+
+  render() {
+    if (!this.state.isReady) {
+      return <AppLoading />;
+    }
+
+    return (
+      <AppContainer />
+    );
+  }
+}
+
+// export default createAppContainer(App);
+export default App
