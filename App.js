@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { createSwitchNavigator, createAppContainer } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
+import { createDrawerNavigator } from "react-navigation-drawer";
 
 class SignInScreen extends React.Component {
   static navigationOptions = {
@@ -107,7 +108,11 @@ const styles = StyleSheet.create({
   }
 });
 
-const AppStack = createStackNavigator({ Home: HomeScreen, Other: OtherScreen });
+const AppStack = createDrawerNavigator(
+  { Home: HomeScreen, Other: OtherScreen },
+  { initialRouteName: "Home" }
+);
+const RootStack = createStackNavigator({ AppStack: { screen: AppStack } });
 const AuthStack = createStackNavigator({ SignIn: SignInScreen });
 
 export default createAppContainer(
