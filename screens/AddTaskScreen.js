@@ -1,4 +1,5 @@
 import React from "react";
+import { connect } from "react-redux";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import {
@@ -20,11 +21,12 @@ const validationSchema = Yup.object().shape({
     .min(2, "Must have at least 2 characters")
 });
 
-export default function AddTaskScreen({}) {
+function AddTaskScreen({ dispatch }) {
   async function handleSubmit(values, actions) {
     const { name } = values;
     try {
       console.log("do something with name!", name);
+      dispatch({ type: "names/ADD", payload: name });
     } catch (error) {}
   }
   return (
@@ -90,3 +92,5 @@ const styles = StyleSheet.create({
     borderColor: "#fff"
   }
 });
+
+export default connect()(AddTaskScreen);

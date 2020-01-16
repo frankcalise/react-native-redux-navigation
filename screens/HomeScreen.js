@@ -17,6 +17,9 @@ class HomeScreen extends React.Component {
           <Button success onPress={this._goToForm}>
             <Text>Add Form</Text>
           </Button>
+          <Button warning onPress={this._viewNames}>
+            <Text>View Names in Store</Text>
+          </Button>
           <Button info onPress={this._signOutAsync}>
             <Text>Actually, sign me out :)</Text>
           </Button>
@@ -25,6 +28,8 @@ class HomeScreen extends React.Component {
     );
   }
 
+  _viewNames = () => this.props.navigation.navigate("Names");
+  
   _showMoreApp = () => {
     this.props.navigation.navigate("Other");
   };

@@ -1,22 +1,38 @@
 import React from "react";
 import { AppLoading } from "expo";
+import { Provider, connect } from "react-redux";
+import { createStore, combineReducers } from "redux";
 import * as Font from "expo-font";
-import {
-  Button,
-  Icon,
-  Left
-} from "native-base";
+import { Button, Icon, Left } from "native-base";
 import { createSwitchNavigator, createAppContainer } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 import { createDrawerNavigator } from "react-navigation-drawer";
 import AddTaskScreen from "./screens/AddTaskScreen";
-import SignInScreen from './screens/SignInScreen'
-import AuthLoadingScreen from './screens/AuthLoadingScreen'
-import OtherScreen from './screens/OtherScreen'
-import HomeScreen from './screens/HomeScreen'
+import SignInScreen from "./screens/SignInScreen";
+import AuthLoadingScreen from "./screens/AuthLoadingScreen";
+import OtherScreen from "./screens/OtherScreen";
+import HomeScreen from "./screens/HomeScreen";
+import NamesScreen from "./screens/NamesScreen";
+
+function names(state = [], action) {
+  // reducer
+  switch (action.type) {
+    case "names/ADD":
+      return [...state, action.payload];
+    default:
+      return state;
+  }
+}
+
+const store = createStore(combineReducers({ names }));
 
 const AppStack = createDrawerNavigator(
-  { Home: HomeScreen, Other: OtherScreen, Add: AddTaskScreen },
+  {
+    Home: HomeScreen,
+    Other: OtherScreen,
+    Add: AddTaskScreen,
+    Names: NamesScreen
+  },
   {
     initialRouteName: "Home",
     navigationOptions: ({ navigation }) => ({
@@ -72,7 +88,11 @@ class App extends React.Component {
       return <AppLoading />;
     }
 
-    return <AppContainer />;
+    return (
+      <Provider store={store}>
+        <AppContainer />
+      </Provider>
+    );
   }
 }
 
