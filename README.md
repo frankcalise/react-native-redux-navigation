@@ -7,3 +7,4 @@ Why do all React Navigation expo snack examples have react-navigation 3.x when d
 expo install react-navigation react-native-gesture-handler react-native-reanimated react-native-screens react-native-safe-area-context
 expo install react-redux redux 
 yarn add react-navigation-stack @react-native-community/masked-view
+export install react-navigation-drawer
