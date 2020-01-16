@@ -20,6 +20,7 @@ import {
 import { createSwitchNavigator, createAppContainer } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 import { createDrawerNavigator } from "react-navigation-drawer";
+import AddTaskScreen from "./screens/AddTaskScreen";
 
 class SignInScreen extends React.Component {
   static navigationOptions = {
@@ -51,10 +52,13 @@ class HomeScreen extends React.Component {
     return (
       <Container>
         <Content>
-          <Button onPress={this._showMoreApp}>
+          <Button primary onPress={this._showMoreApp}>
             <Text>Show me more of the app</Text>
           </Button>
-          <Button onPress={this._signOutAsync}>
+          <Button success onPress={this._goToForm}>
+            <Text>Add Form</Text>
+          </Button>
+          <Button info onPress={this._signOutAsync}>
             <Text>Actually, sign me out :)</Text>
           </Button>
         </Content>
@@ -64,6 +68,10 @@ class HomeScreen extends React.Component {
 
   _showMoreApp = () => {
     this.props.navigation.navigate("Other");
+  };
+
+  _goToForm = () => {
+    this.props.navigation.navigate("Add");
   };
 
   _signOutAsync = async () => {
@@ -129,7 +137,7 @@ const styles = StyleSheet.create({
 });
 
 const AppStack = createDrawerNavigator(
-  { Home: HomeScreen, Other: OtherScreen },
+  { Home: HomeScreen, Other: OtherScreen, Add: AddTaskScreen },
   {
     initialRouteName: "Home",
     navigationOptions: ({ navigation }) => ({
@@ -162,7 +170,7 @@ const AppNavigator = createSwitchNavigator(
   }
 );
 
-const AppContainer = createAppContainer(AppNavigator)
+const AppContainer = createAppContainer(AppNavigator);
 
 class App extends React.Component {
   constructor(props) {
@@ -175,7 +183,7 @@ class App extends React.Component {
   async componentDidMount() {
     await Font.loadAsync({
       Roboto: require("native-base/Fonts/Roboto.ttf"),
-      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
+      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
     });
     this.setState({ isReady: true });
   }
@@ -185,11 +193,9 @@ class App extends React.Component {
       return <AppLoading />;
     }
 
-    return (
-      <AppContainer />
-    );
+    return <AppContainer />;
   }
 }
 
 // export default createAppContainer(App);
-export default App
+export default App;
