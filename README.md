@@ -16,3 +16,9 @@ export install react-navigation-drawer
 yarn add native-base
 
 expo install expo-font
+
+expo install formik yup
+
+expo redux-persist
+
+yarn add --dev redux-logger

@@ -1,7 +1,9 @@
 import React from "react";
 import { AppLoading } from "expo";
-import { Provider, connect } from "react-redux";
-import { createStore, combineReducers } from "redux";
+import { PersistGate } from "redux-persist/integration/react";
+import { Provider } from "react-redux";
+import { createLogger } from "redux-logger";
+import { createStore, combineReducers, applyMiddleware } from "redux";
 import * as Font from "expo-font";
 import { Button, Icon, Left } from "native-base";
 import { createSwitchNavigator, createAppContainer } from "react-navigation";
@@ -13,8 +15,10 @@ import AuthLoadingScreen from "./screens/AuthLoadingScreen";
 import OtherScreen from "./screens/OtherScreen";
 import HomeScreen from "./screens/HomeScreen";
 import NamesScreen from "./screens/NamesScreen";
+import { AsyncStorage } from "react-native";
+import { persistReducer, persistStore } from "redux-persist";
 
-function names(state = [], action) {
+function namesReducer(state = [], action) {
   // reducer
   switch (action.type) {
     case "names/ADD":
@@ -24,7 +28,16 @@ function names(state = [], action) {
   }
 }
 
-const store = createStore(combineReducers({ names }));
+const persistConfig = {
+  key: "names",
+  storage: AsyncStorage
+};
+
+const reducers = combineReducers({ names: namesReducer });
+const persistedReducer = persistReducer(persistConfig, reducers);
+
+const store = createStore(persistedReducer, applyMiddleware(createLogger()));
+const persistor = persistStore(store);
 
 const AppStack = createDrawerNavigator(
   {
@@ -90,7 +103,9 @@ class App extends React.Component {
 
     return (
       <Provider store={store}>
-        <AppContainer />
+        <PersistGate loading={null} persistor={persistor}>
+          <AppContainer />
+        </PersistGate>
       </Provider>
     );
   }
